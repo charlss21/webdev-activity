@@ -6,13 +6,18 @@ use App\Models\User;
 use App\Models\Student;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
 
     public function run(): void
     {
-        User::factory(1000)->create();
+        User::create([
+    'name' => 'Test User',               // mandatory, since no default in DB
+    'email' => 'test@me.com',
+    'password' => bcrypt('password'),
+     ]);
             Student::create([
             'firstname' => 'John',
             'lastname' => 'Doe',

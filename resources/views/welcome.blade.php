@@ -273,5 +273,13 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+
+        {{-- resources/views/welcome.blade.php --}}
+@if(Auth::check())
+  <p>Welcome, {{ Auth::user()->name }}!</p>
+@else
+  <p>Please log in.</p>
+@endif
+
     </body>
 </html>
