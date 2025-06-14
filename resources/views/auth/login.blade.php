@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Login')
+@section('title', 'login')
 
 @section('content')
 <style>
@@ -39,7 +39,7 @@
 
 <div class="login-page">
     <div class="login-card shadow">
-        <h3 class="text-center mb-4"><i class="bi bi-person-circle me-2"></i>Login</h3>
+        <h3 class="text-center mb-4"><i class="bi bi-person-lock me-2"></i>login</h3>
 
         {{-- Flash Messages --}}
         @if(session('success'))
@@ -65,16 +65,13 @@
                     <span class="input-group-text bg-transparent text-white border-end-0">
                         <i class="bi bi-envelope"></i>
                     </span>
-                    <input 
-                        type="email" 
-                        class="form-control text-white bg-transparent border-start-0 @error('email') is-invalid @enderror"
-                        placeholder="you@example.com"
-                        name="email"
-                        id="email"
-                        value="{{ old('email') }}"
-                        required 
-                        autofocus
-                    >
+                    <input type="email"
+                           class="form-control text-white bg-transparent border-start-0 @error('email') is-invalid @enderror"
+                           name="email"
+                           id="email"
+                           placeholder="you@example.com"
+                           value="{{ old('email') }}"
+                           required>
                 </div>
                 @error('email')
                     <div class="text-danger small mt-1">{{ $message }}</div>
@@ -87,14 +84,12 @@
                     <span class="input-group-text bg-transparent text-white border-end-0">
                         <i class="bi bi-lock"></i>
                     </span>
-                    <input 
-                        type="password" 
-                        class="form-control text-white bg-transparent border-start-0 @error('password') is-invalid @enderror"
-                        placeholder="••••••••"
-                        name="password"
-                        id="password"
-                        required
-                    >
+                    <input type="password"
+                           class="form-control text-white bg-transparent border-start-0 @error('password') is-invalid @enderror"
+                           name="password"
+                           id="password"
+                           placeholder="••••••••"
+                           required>
                 </div>
                 @error('password')
                     <div class="text-danger small mt-1">{{ $message }}</div>
@@ -105,6 +100,10 @@
                 <button type="submit" class="btn btn-light text-primary fw-bold">
                     <i class="bi bi-box-arrow-in-right me-1"></i> Login
                 </button>
+            </div>
+
+            <div class="mt-3 text-center">
+                Don't have an account? <a href="{{ route('register') }}">Register here</a>
             </div>
         </form>
     </div>

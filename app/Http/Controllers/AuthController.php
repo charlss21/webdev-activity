@@ -8,41 +8,70 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 
-
 class AuthController extends Controller
 {
-    public function showLoginForm() {
-        if(Session::has('loginId')) {
+    public function showLoginForm()
+    {
+        if (Session::has('loginId')) {
             return redirect()->route('dashboard');
         }
+
         return view('auth.login');
     }
-   public function login(Request $request){
-    $request->validate([
-        'email' => 'required|string|email',
-        'password' => 'required|string'
-    ]);
 
-    $credentials = User::where('email', $request->email)->first();
-
-    if ($credentials && Hash::check($request->password, $credentials->password)) {
-        Auth::login($credentials);
-        Session::put('loginId', $credentials->id);
-        Session::regenerate();
-        return redirect()->route('dashboard')->with('success', 'Logged in successfully');
+    public function showRegisterForm()
+    {
+        return view('auth.register');
     }
 
-    return back()->with('error', 'Invalid credentials');
-}
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string'
+        ]);
 
-public function logout(Request $request)
-{
-    Auth::logout();
+        $user = User::where('email', $request->email)->first();
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user);
+            Session::put('loginId', $user->id);
+            $request->session()->regenerate();
 
-    return redirect()->route('login')->with('success', 'Logged out successfully');
-}
+            return redirect()->route('dashboard')->with('success', 'Logged in successfully');
+        }
 
+        return back()->with('error', 'Invalid credentials');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        Auth::login($user);
+        Session::put('loginId', $user->id);
+        $request->session()->regenerate();
+
+        return redirect()->route('dashboard')->with('success', 'Registered successfully');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'Logged out successfully');
+    }
 }
